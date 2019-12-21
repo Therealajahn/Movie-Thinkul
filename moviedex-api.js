@@ -7,10 +7,21 @@ const helmet = require('helmet');
 const cors = require('cors');
 
 
-
-app.use(morgan("common"));
+const morganSetting = process.env.NODE_ENV === 'production'?
+                      "tiny" : "common";
+app.use(morgan(morganSetting));
 app.use(helmet());
 app.use(cors());
+
+app.use((error,req,res,next)=>{
+    let request
+    if(process.env.NODE_ENV === 'production'){
+        response = {error: {message: 'Server error'} }
+    }else{
+        response = { error };
+    }
+    res.status(500).json(response);
+})
 
 app.use(function validateApiKey(req,res,next){
     const apiKey = process.env.API_KEY;
@@ -50,4 +61,5 @@ app.get('/movie',(req,res)=>{
     res.json(result);   
 })
 
-app.listen(3000);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT);
