@@ -33,6 +33,9 @@ app.use(function validateApiKey(req,res,next){
     next();
 })
 
+app.get('/',(res)=>{
+    res.send('empty url');
+})
 app.get('/movie',(req,res)=>{
     
     const {genre="", country="",avg_vote="0"} = req.query;
